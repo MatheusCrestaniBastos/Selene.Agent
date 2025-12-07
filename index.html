@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agente Automação - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-robot"></i>
+            <h2>Agente AI</h2>
+        </div>
+        
+        <nav class="menu">
+            <a href="#" class="menu-item active" data-page="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" data-page="automations">
+                <i class="fas fa-bolt"></i>
+                <span>Automações</span>
+            </a>
+            <a href="#" class="menu-item" data-page="integrations">
+                <i class="fas fa-plug"></i>
+                <span>Integrações</span>
+            </a>
+            <a href="#" class="menu-item" data-page="logs">
+                <i class="fas fa-list"></i>
+                <span>Logs</span>
+            </a>
+            <a href="#" class="menu-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+        </nav>
+
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <p class="user-name">Usuário</p>
+                <p class="user-email">usuario@email.com</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Pages Container -->
+        <div class="container">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Automações Ativas</p>
+                            <h3 class="stat-value" id="active-automations">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Execuções Hoje</p>
+                            <h3 class="stat-value" id="executions-today">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Integrações</p>
+                            <h3 class="stat-value" id="total-integrations">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Taxa de Sucesso</p>
+                            <h3 class="stat-value" id="success-rate">0%</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Automações Recentes</h3>
+                            <button class="btn-primary" onclick="showPage('automations')">
+                                <i class="fas fa-plus"></i> Nova Automação
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="recent-automations" class="empty-state">
+                                <i class="fas fa-robot"></i>
+                                <p>Nenhuma automação criada ainda</p>
+                                <button class="btn-primary" onclick="showPage('automations')">Criar Primeira Automação</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Execuções Recentes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="recent-logs" class="empty-state">
+                                <i class="fas fa-list"></i>
+                                <p>Nenhuma execução ainda</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automations Page -->
+            <div id="automations-page" class="page">
+                <div class="page-header">
+                    <button class="btn-primary" onclick="openCreateAutomationModal()">
+                        <i class="fas fa-plus"></i> Nova Automação
+                    </button>
+                </div>
+
+                <div id="automations-list" class="automations-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-robot"></i>
+                        <p>Nenhuma automação criada</p>
+                        <button class="btn-primary" onclick="openCreateAutomationModal()">Criar Primeira Automação</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations Page -->
+            <div id="integrations-page" class="page">
+                <div class="integrations-grid">
+                    <div class="integration-card">
+                        <div class="integration-icon whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <p>Envie mensagens automaticamente</p>
+                        <button class="btn-secondary" onclick="connectIntegration('whatsapp')">
+                            <i class="fas fa-plug"></i> Conectar
+                        </button>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="integration-icon gmail">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Gmail</h3>
+                        <p>Envie emails automaticamente</p>
+                        <button class="btn-secondary" onclick="connectIntegration('gmail')">
+                            <i class="fas fa-plug"></i> Conectar
+                        </button>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="integration-icon sheets">
+                            <i class="fas fa-table"></i>
+                        </div>
+                        <h3>Google Sheets</h3>
+                        <p>Adicione dados em planilhas</p>
+                        <button class="btn-secondary" onclick="connectIntegration('sheets')">
+                            <i class="fas fa-plug"></i> Conectar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <div class="card-header">
+                        <h3>Integrações Conectadas</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="connected-integrations" class="empty-state">
+                            <i class="fas fa-plug"></i>
+                            <p>Nenhuma integração conectada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs Page -->
+            <div id="logs-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Histórico de Execuções</h3>
+                        <div class="filter-group">
+                            <select id="log-filter" onchange="filterLogs()">
+                                <option value="all">Todos</option>
+                                <option value="success">Sucesso</option>
+                                <option value="error">Erro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="logs-list" class="empty-state">
+                            <i class="fas fa-list"></i>
+                            <p>Nenhum log disponível</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Configurações</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-section">
+                            <h4>Perfil</h4>
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" id="user-name" class="form-control" placeholder="Seu nome">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="user-email" class="form-control" placeholder="seu@email.com">
+                            </div>
+                            <button class="btn-primary">Salvar Alterações</button>
+                        </div>
+
+                        <div class="settings-section">
+                            <h4>API Backend</h4>
+                            <div class="form-group">
+                                <label>URL da API</label>
+                                <input type="text" id="api-url" class="form-control" value="http://localhost:8000" placeholder="http://localhost:8000">
+                            </div>
+                            <button class="btn-secondary" onclick="testConnection()">Testar Conexão</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create Automation -->
+    <div id="create-automation-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nova Automação</h3>
+                <button class="modal-close" onclick="closeModal('create-automation-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nome da Automação</label>
+                    <input type="text" id="automation-name" class="form-control" placeholder="Ex: Enviar boas-vindas WhatsApp">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="automation-description" class="form-control" rows="3" placeholder="Descreva o que esta automação faz"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Ação</label>
+                    <select id="automation-type" class="form-control">
+                        <option value="">Selecione...</option>
+                        <option value="whatsapp">Enviar WhatsApp</option>
+                        <option value="email">Enviar Email</option>
+                        <option value="sheets">Adicionar em Planilha</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('create-automation-modal')">Cancelar</button>
+                <button class="btn-primary" onclick="createAutomation()">Criar Automação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="modal active">
+        <div class="modal-content auth-modal">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Registrar</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form active">
+                <h3>Bem-vindo de volta!</h3>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••">
+                </div>
+                <button class="btn-primary btn-block" onclick="login()">Entrar</button>
+                <p class="auth-footer">Ou use modo demo sem login</p>
+                <button class="btn-secondary btn-block" onclick="useDemoMode()">Modo Demo</button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form">
+                <h3>Criar Conta</h3>
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="register-name" class="form-control" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="register-email" class="form-control" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="register-password" class="form-control" placeholder="••••••••">
+                </div>
+                <button class="btn-primary btn-block" onclick="register()">Criar Conta</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
